@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="edu.du.sb1011.mapper.CommentMapper">
+
+    <!-- DTO 필드와 DB 컬럼 매핑 설정 -->
+    <resultMap id="commentResultMap" type="edu.du.sb1011.dto.CommentDto">
+        <id property="commentIdx" column="comment_idx"/>
+        <result property="commentBoardIdx" column="comment_board_idx"/>
+        <result property="parentCommentIdx" column="parent_comment_idx"/>
+        <result property="commentContents" column="comment_contents"/>
+        <result property="commentCreatorId" column="comment_creator_id"/>
+        <result property="commentCreatedDatetime" column="comment_created_datetime"/>
+        <result property="commentUpdaterId" column="comment_updater_id"/>
+        <result property="commentUpdatedDatetime" column="comment_updated_datetime"/>
+        <result property="deletedYn" column="deleted_yn"/>
+    </resultMap>
+
+    <!-- 특정 게시글에 대한 댓글 리스트 조회 -->
+    <select id="selectCommentListByBoardIdx" parameterType="int" resultType="edu.du.sb1011.dto.CommentDto">
+        SELECT
+        comment_idx,
+        comment_board_idx,
+        parent_comment_idx,
+        comment_contents,
+        comment_creator_id,
+        DATE_FORMAT(comment_created_datetime, '%Y-%m-%d %H:%i:%s') AS comment_created_datetime, <!-- 형식 변경 -->
+        comment_updater_id,
+        DATE_FORMAT(comment_updated_datetime, '%Y-%m-%d %H:%i:%s') AS comment_updated_datetime, <!-- 형식 변경 -->
+        deleted_yn
+        FROM
+        t_comment
+        WHERE
+        comment_board_idx = #{comment_board_idx}
+        AND deleted_yn = 'n'
+        ORDER BY
+        comment_idx ASC
+    </select>
+
+
+    <!-- 새로운 댓글 작성 -->
+    <insert id="insertComment" parameterType="edu.du.sb1011.dto.CommentDto" useGeneratedKeys="true" keyProperty="commentIdx">
+        <![CDATA[
+        INSERT INTO t_comment
+        (
+            comment_board_idx,
+            parent_comment_idx,
+            comment_contents,
+            comment_creator_id,
+            comment_created_datetime,
+            deleted_yn
+        )
+        VALUES
+            (
+                #{commentBoardIdx},
+                #{parentCommentIdx},
+                #{commentContents},
+                #{commentCreatorId},
+                NOW(),
+                'n'
+            )
+        ]]>
+    </insert>
+
+    <!-- 특정 댓글 수정 -->
+    <update id="updateComment" parameterType="edu.du.sb1011.dto.CommentDto">
+        <![CDATA[
+        UPDATE t_comment SET
+                             comment_contents = #{commentContents},
+                             comment_updater_id = #{commentUpdaterId},
+                             comment_updated_datetime = NOW()
+        WHERE
+            comment_idx = #{commentIdx}
+          AND deleted_yn = 'n'
+        ]]>
+    </update>
+
+    <!-- 댓글 삭제 (논리적 삭제) -->
+    <update id="deleteComment" parameterType="int">
+        <![CDATA[
+        UPDATE t_comment SET
+                             deleted_yn = 'Y',
+                             comment_updater_id = 'admin',
+                             comment_updated_datetime = NOW()
+        WHERE
+            comment_idx = #{commentIdx}
+        ]]>
+    </update>
+
+    <!-- 특정 댓글 조회 -->
+    <select id="selectCommentByIdx" parameterType="int" resultMap="commentResultMap">
+        <![CDATA[
+        SELECT
+            comment_idx,
+            comment_board_idx,
+            parent_comment_idx,
+            comment_contents,
+            comment_creator_id,
+            DATE_FORMAT(comment_created_datetime, '%Y.%m.%d %H:%i:%s') AS comment_created_datetime,
+            comment_updater_id,
+            DATE_FORMAT(comment_updated_datetime, '%Y.%m.%d %H:%i:%s') AS comment_updated_datetime,
+            deleted_yn
+        FROM
+            t_comment
+        WHERE
+            comment_idx = #{commentIdx}
+          AND deleted_yn = 'n'
+        ]]>
+    </select>
+
+</mapper>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>게시글 상세 화면</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="container">
+	<h2>게시글 상세 화면</h2>
+	<form id="frm" method="post">
+		<table class="board_detail">
+			<colgroup>
+				<col width="15%"/>
+				<col width="35%"/>
+				<col width="15%"/>
+				<col width="35%"/>
+			</colgroup>
+			<caption>게시글 상세내용</caption>
+			<tbody>
+			<tr>
+				<th scope="row">글 번호</th>
+				<td th:if="${board != null}" th:text="${board.boardIdx}"></td>
+				<th scope="row">조회수</th>
+				<td th:if="${board != null}" th:text="${board.hitCnt}"></td>
+			</tr>
+			<tr>
+				<th scope="row">작성자</th>
+				<td th:if="${board != null}" th:text="${board.creatorId}"></td>
+				<th scope="row">작성일</th>
+				<td th:if="${board != null}" th:text="${board.createdDatetime}"></td>
+			</tr>
+			<tr>
+				<th scope="row">제목</th>
+				<td colspan="3">
+					<input type="text" id="boardTitle" name="boardTitle" th:if="${board != null}" th:value="${board.title}"/>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" class="view_text">
+					<textarea title="내용" id="boardContents" name="boardContents" th:if="${board != null}" th:text="${board.contents}"></textarea>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<input type="hidden" id="boardIdx" name="boardIdx" th:if="${board != null}" th:value="${board.boardIdx}">
+	</form>
+
+	<a href="#this" id="list" class="btn">목록으로</a>
+	<a href="#this" id="edit" class="btn">수정하기</a>
+	<a href="#this" id="delete" class="btn">삭제하기</a>
+</div>
+
+<div class="container">
+	<h3>댓글</h3>
+	<form id="commentForm" method="post">
+		<table class="comment_detail">
+			<colgroup>
+				<col width="15%"/>
+				<col width="70%"/>
+				<col width="15%"/>
+			</colgroup>
+			<tbody>
+			<tr>
+				<th scope="row">작성자</th>
+				<td><input type="text" id="commentCreatorId" name="comment_creator_id" required/></td>
+			</tr>
+			<tr>
+				<th scope="row">내용</th>
+				<td><textarea id="commentContents" name="comment_contents" required></textarea></td>
+				<td><button type="button" id="commentInsert" class="btn">입력</button></td>
+			</tr>
+			</tbody>
+		</table>
+		<input type="hidden" id="commentBoardIdx" name="comment_board_idx" th:value="${board.boardIdx}">
+	</form>
+
+	<table class="comment_list">
+		<thead>
+			<tr>
+				<th>작성자</th>
+				<th>내용</th>
+				<th>작성일</th>
+			</tr>
+		</thead>
+		<tbody th:if="${commentList != null && !commentList.isEmpty()}">
+			<tr th:each="comment : ${commentList}">
+				<td th:text="${comment.commentCreatorId}"></td>
+				<td th:text="${comment.commentContents}"></td>
+				<td th:text="${comment.commentCreatedDatetime}"></td>
+			</tr>
+		</tbody>
+		<tbody th:if="${commentList == null || commentList.isEmpty()}">
+			<tr>
+				<td colspan="3">댓글이 없습니다.</td>
+			</tr>
+		</tbody>
+	</table>
+
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#list").on("click", function(){
+			location.href = "/board/openBoardList.do";
+		});
+
+		$("#edit").on("click", function(){
+			var frm = $("#frm")[0];
+			frm.action = "/board/updateBoard.do";
+			frm.submit();
+		});
+
+		$("#delete").on("click", function(){
+			var frm = $("#frm")[0];
+			frm.action = "/board/deleteBoard.do";
+			frm.submit();
+		});
+
+		$("#commentInsert").on("click", function(){
+			var commentForm = $("#commentForm")[0];
+			commentForm.action = "/comment/insertComment.do";
+			commentForm.submit();
+		});
+	});
+</script>
+
+</body>
+</html>
