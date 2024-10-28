@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.PostConstruct;
 
@@ -25,17 +22,6 @@ public class BeginController {
     public String index() {
         return "/sample/all";
     }
-
-//    @GetMapping("/login")
-//    public String loginForm() {
-//        return "/sample/loginForm";
-//    }
-//
-//    @PostMapping("/login")
-//    public String loginResult(@RequestParam String username, @RequestParam String password, Model model) {
-//        log.info("이메일 {}, 패스워드 {}", username, password);
-//        return "/";
-//    }
 
     @PostConstruct
     public void init() {
