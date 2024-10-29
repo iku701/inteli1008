@@ -15,7 +15,6 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -63,7 +62,7 @@ public class SecurityConfig {
 
 //        http.formLogin();
 //        http.formLogin().loginPage("/sample/login").permitAll();
-//        http.csrf().disable();
+        http.csrf().disable();
 //        http.logout();
         http.formLogin()
                 .loginPage("/sample/login") // 로그인 페이지 URL 설정
@@ -76,14 +75,11 @@ public class SecurityConfig {
                 .invalidateHttpSession(true) // 로그아웃 시 세션 무효화
                 .deleteCookies("JSESSIONID") // 로그아웃 시 쿠키 삭제
                 .permitAll();
-        http
-                .csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()); // CSRF 토큰 설정
 
         http.exceptionHandling().accessDeniedPage("/sample/accessDenied");
-//        http.csrf()
-//                .ignoringAntMatchers("/h2-console/**")
-//                .and().headers().frameOptions().sameOrigin();  // 여기!
+        http.csrf()
+                .ignoringAntMatchers("/h2-console/**")
+                .and().headers().frameOptions().sameOrigin();  // 여기!
 
         return http.build();
     }

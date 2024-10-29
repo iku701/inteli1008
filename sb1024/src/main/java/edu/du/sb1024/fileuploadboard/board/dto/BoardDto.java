@@ -1,11 +1,9 @@
 package edu.du.sb1024.fileuploadboard.board.dto;
 
 import lombok.Data;
-import lombok.ToString;
 
 import java.util.List;
 
-@ToString
 @Data
 public class BoardDto {
 	

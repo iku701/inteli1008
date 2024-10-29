@@ -1,10 +1,22 @@
 package edu.du.sb1024.spring;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
+
 public class RegisterRequest {
 
+	@NotBlank
+	@Email
 	private String email;
+	@NotBlank
+	@Size(min = 4)
 	private String password;
+	@NotEmpty
 	private String confirmPassword;
+	@NotBlank
+	@Size(min = 3)
 	private String name;
 
 	public String getEmail() {

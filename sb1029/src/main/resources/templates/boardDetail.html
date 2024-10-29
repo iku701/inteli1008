@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>게시글 상세보기</title>
+	<link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="container">
+	<h2>게시글 상세</h2>
+	<div>
+		<label>글번호:</label>
+		<span th:text="${post.boardIdx}"></span>
+	</div>
+	<div>
+		<label>제목:</label>
+		<span th:text="${post.title}"></span>
+	</div>
+	<div>
+		<label>내용:</label>
+		<span th:text="${post.contents}"></span>
+	</div>
+	<div>
+		<label>조회수:</label>
+		<span th:text="${post.hitCnt}"></span>
+	</div>
+	<div>
+		<label>작성일:</label>
+		<span th:text="${post.createdDatetime}"></span>
+	</div>
+	<a th:href="@{/board/openBoardList}" class="btn">목록으로</a>
+</div>
+</body>
+</html>
