@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{change.pwd.title}">Change Password</title>
+</head>
+<body>
+<p th:text="#{change.pwd.done}">Password change completed.</p>
+<p>
+    <a th:href="@{/main}">
+        [<span th:text="#{go.main}">Go to main</span>]
+    </a>
+</p>
+</body>
+</html>
