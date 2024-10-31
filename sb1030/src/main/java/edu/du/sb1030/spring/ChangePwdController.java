@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-
 @Controller
 @RequestMapping("/edit/changePassword")
 public class ChangePwdController {
@@ -20,16 +19,18 @@ public class ChangePwdController {
 	private ChangePasswordService changePasswordService;
 
 	@GetMapping
-	public String form(@ModelAttribute ChangePwdCommand pwdCmd, Model model) {
-		model.addAttribute("passwordCommand", new ChangePwdCommand());
+	public String form(@ModelAttribute ChangePwdCommand pwdCmd, HttpSession session) {
+		AuthInfo authInfo = (AuthInfo) session.getAttribute("authInfo");
+		if (authInfo == null) {
+			return "redirect:/login";
+		}
 		return "/edit/changePwdForm";
 	}
 
 	@PostMapping
-	public String submit(
-			@ModelAttribute("command") ChangePwdCommand pwdCmd,
-			Errors errors,
-			HttpSession session) {
+	public String submit(@ModelAttribute ChangePwdCommand pwdCmd,
+						 Errors errors,
+						 HttpSession session) {
 		new ChangePwdCommandValidator().validate(pwdCmd, errors);
 		if (errors.hasErrors()) {
 			return "/edit/changePwdForm";
@@ -40,6 +41,7 @@ public class ChangePwdController {
 					authInfo.getEmail(),
 					pwdCmd.getCurrentPassword(),
 					pwdCmd.getNewPassword());
+			System.out.println("------------->" + pwdCmd.getNewPassword());
 			return "/edit/changedPwd";
 		} catch (WrongIdPasswordException e) {
 			errors.rejectValue("currentPassword", "notMatching");

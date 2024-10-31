@@ -8,11 +8,10 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-
 public class RegisterRequestValidator implements Validator {
 	private static final String emailRegExp =
 			"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
-			"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+					"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	private Pattern pattern;
 
 	public RegisterRequestValidator() {
